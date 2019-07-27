@@ -1,0 +1,10 @@
+default:
+  image: kedikx/private:latest
+
+stages:
+  - test
+
+test:
+  stage: test
+  script:
+    - ./setup.py test
