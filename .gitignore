@@ -23,7 +23,5 @@ eggs/
 # Unit test / coverage reports
 .coverage
 .coverage.*
-.cache
-coverage.xml
-*.cover
+coverage.*
 

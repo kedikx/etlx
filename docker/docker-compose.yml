@@ -3,6 +3,7 @@ version: "3.7"
 services:
   etlxci:
     container_name: etlxci
+    user: "1001:1001"   
     image: kedikx/etlxci:latest
     build:
       context: ./ci

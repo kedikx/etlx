@@ -3,8 +3,38 @@ default:
 
 stages:
   - test
+  - coverage
+  - deploy
 
 test:
   stage: test
   script:
-    - ./ci_test.sh
+    - coverage run --source=etlx,tests setup.py test
+  artifacts:
+    paths:
+      - .coverage
+
+coverage:
+  stage: coverage
+  dependencies:
+    - test
+  script:
+    - coverage report -m --skip-covered > coverage.txt
+    - coverage html -d coverage.html
+    - cat coverage.txt | grep "TOTAL"
+  coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
+  artifacts:
+    paths:
+      - coverage.html
+    expire_in: 1 day
+
+pages:
+  stage: deploy
+  dependencies:
+    - coverage
+  script:
+    - mv coverage.html/ public/
+  artifacts:
+    paths:
+      - public
+    expire_in: 1 day
