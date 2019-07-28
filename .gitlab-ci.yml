@@ -13,6 +13,7 @@ test:
   artifacts:
     paths:
       - .coverage
+      - etlx/build.py
 
 coverage:
   stage: coverage
