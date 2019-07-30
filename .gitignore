@@ -2,7 +2,7 @@
 etlx/build.py
 
 # Byte-compiled / optimized / DLL files
-__pycache__/
+__pycache__
 *.py[cod]
 *$py.class
 
@@ -10,13 +10,13 @@ __pycache__/
 *.so
 
 # Distribution / packaging
-build/
-dist/
-develop-eggs/
-downloads/
-eggs/
-.eggs/
-*.egg-info/
+build
+dist
+develop-eggs
+downloads
+eggs
+.eggs
+*.egg-info
 *.egg
 
 

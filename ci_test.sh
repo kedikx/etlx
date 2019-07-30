@@ -4,4 +4,4 @@ set -e
 DIR=`dirname "${BASH_SOURCE[0]}"`
 cd ${DIR}
 # run tests
-coverage run --source=etlx,tests setup.py test
+coverage run setup.py test

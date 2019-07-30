@@ -4,6 +4,6 @@ set -e
 DIR=`dirname "${BASH_SOURCE[0]}"`
 cd ${DIR}
 # run tests
-coverage report -m --skip-covered > coverage.txt
-coverage html -d coverage.html
+coverage report > coverage.txt
+coverage html
 grep "TOTAL" coverage.txt

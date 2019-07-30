@@ -20,7 +20,7 @@ coverage:
   dependencies:
     - test
   script:
-    - coverage report -m --skip-covered > coverage.txt
+    - coverage report > coverage.txt
     - coverage html -d coverage.html
     - cat coverage.txt | grep "TOTAL"
   coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
