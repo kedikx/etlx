@@ -1,4 +1,5 @@
 *.code-workspace
+.vscode
 etlx/build.py
 
 # Byte-compiled / optimized / DLL files
