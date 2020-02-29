@@ -20,18 +20,17 @@ class SQLLexer:
     DOT        = '.'
     EOS        = ';'
 
-    def __init__(self, sql):
+    def __init__(self, sql, whitespaces=True):
         self.itr = iter(sql)
         self.buffer = deque()
         self.line = 1
         self.col = 1
+        self.whitespaces = whitespaces
 
     def load_buffer(self):
         while len(self.buffer)<3:
             c = next(self.itr, None)
             self.buffer.append(c)
-            if c is None:
-                break
         return self.buffer[0]
 
     def read_char(self):
@@ -137,7 +136,9 @@ class SQLLexer:
         if self.buffer[0] is None:
             raise StopIteration()
         if self.is_whitespace(self.buffer[0]):
-            return self.read_whitespace()
+            token = self.read_whitespace()
+            if self.whitespaces:
+                return token
         if self.buffer[0]=='#':
             return self.read_comment_single()
         if (self.buffer[0],self.buffer[1]) == ('-','-'):
@@ -146,13 +147,33 @@ class SQLLexer:
             return self.read_comment_multi()
         if self.is_alpha(self.buffer[0]):
             return self.read_name()
+        if self.buffer[0]=='[':
+            self.read_char()
+            token = self.read_name()
+            if self.buffer[0]!=']':
+                raise ValueError(f"{self.line}: {self.buffer[0]}")
+            self.read_char()
+            return token
         if self.is_digit(self.buffer[0]):
             return self.read_number()
         if self.buffer[0] in ("'",'"','`'):
             return self.read_quoted()
-        if self.buffer[0] in (".",',',';','+','-','='):
-            return SQLToken(self, self.buffer[0], self.buffer[0])
-        raise ValueError(f"{self.line}")
+        if self.buffer[0] in ('(',')'):
+            token = SQLToken(self, self.buffer[0], self.buffer[0])
+            self.read_char()
+            return token
+        if (self.buffer[0],self.buffer[1]) in (('<','='),('>','='),('!','='),('<','>'),('+','=')):
+            v = self.buffer[0]+self.buffer[1]
+            token = SQLToken(self, v, v)
+            self.read_char()
+            self.read_char()
+            return token
+        if self.buffer[0] in (".",',',';','+','-','/','*','<','>','=','|'):
+            v = self.buffer[0]
+            token = SQLToken(self, v, v)
+            self.read_char()
+            return token
+        raise ValueError(f"{self.line}: {self.buffer[0]}")
             
 
 
