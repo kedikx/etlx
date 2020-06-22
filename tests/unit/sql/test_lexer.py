@@ -5,7 +5,7 @@ class Test_sql_SQLLexer(unittest.TestCase):
 
     def test0_name(self):
         sql="SELECT AbcZ_109"
-        lexer = SQLLexer(sql)
+        lexer = SQLLexer(sql, whitespaces=True)
         tokens = list(lexer)
         self.assertEqual( len(tokens), 3)
         x = tokens[0]
@@ -29,7 +29,7 @@ class Test_sql_SQLLexer(unittest.TestCase):
     def test1_num(self):
         sql="""12 
         3.14 987654321"""
-        lexer = SQLLexer(sql)
+        lexer = SQLLexer(sql, whitespaces=True)
         tokens = list(lexer)
         self.assertEqual( len(tokens), 5)
         x = tokens[0]
@@ -53,7 +53,7 @@ class Test_sql_SQLLexer(unittest.TestCase):
         sql="""12 -- AAA
         /* 3.14 98765
         4321*/"""
-        lexer = SQLLexer(sql, False)
+        lexer = SQLLexer(sql, whitespaces=False, comments=True)
         tokens = list(lexer)
         self.assertEqual( len(tokens), 3)
         for x in tokens:
@@ -67,7 +67,7 @@ class Test_sql_SQLLexer(unittest.TestCase):
       WHERE L<1 OR G>2 AND LE<=3 AND GE>=4 OR NE1!=5 OR NE2<>6
       ;""" 
         tokens = []
-        lexer = SQLLexer(sql, False)
+        lexer = iter(SQLLexer(sql, whitespaces=False))
         while True:
             x = next(lexer, None)
             if x is None:

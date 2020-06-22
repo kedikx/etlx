@@ -63,12 +63,12 @@ class SQLLexer:
         return c and c>='0' and c<='9'
 
     def read_whitespace(self):
-        value = ''
+        x = SQLToken(self,  self.WHITESPACE, '')
         while self.is_whitespace(self.peek()):
-            value += self.read()
-        if not value:
-            return None
-        return SQLToken(self,  self.WHITESPACE, value)
+            x.value += self.read()
+#        if not x.value:
+#            return None
+        return x
 
     def read_name(self):
         x = SQLToken(self,  self.NAME)
