@@ -16,17 +16,20 @@ class SQLLexer:
     INT        = 'INT'
     FLOAT      = 'FLOAT'
     CHAR       = 'CHAR'
-    COMMA      = ','
-    DOT        = '.'
+    COMMA      = 'COMMA'
+    DOT        = 'DOT'
+    COLON      = 'COLON'
+    SEMICOLON  = 'SEMICOLON'
     DELIMITER  = 'DELIMITER'
 
-    def __init__(self, sql, whitespaces=True):
+    def __init__(self, sql, *, whitespaces=False, comments=False):
         self.buffer = str(sql)
         self.pos = 0
         self.line = 1
         self.col = 1
-        self.whitespaces = whitespaces
         self.delimiter = ';'
+        self.whitespaces = whitespaces
+        self.comments = comments
 
     def peek(self, n=1):
         s = self.buffer[self.pos:self.pos+n]
@@ -60,10 +63,12 @@ class SQLLexer:
         return c and c>='0' and c<='9'
 
     def read_whitespace(self):
-        x = SQLToken(self,  self.WHITESPACE)
+        value = ''
         while self.is_whitespace(self.peek()):
-            x.value += self.read()
-        return x
+            value += self.read()
+        if not value:
+            return None
+        return SQLToken(self,  self.WHITESPACE, value)
 
     def read_name(self):
         x = SQLToken(self,  self.NAME)
@@ -113,7 +118,7 @@ class SQLLexer:
             x.value += c
         return x
 
-    def iter_tokens(self):
+    def __iter__(self):
         while True:
             if self.peek() is None:
                 break
@@ -123,55 +128,55 @@ class SQLLexer:
                 x.value = self.read(dlen)
                 yield x
             elif self.is_whitespace(self.peek()):
-                yield self.read_whitespace()
+                x = self.read_whitespace()
+                if self.whitespaces:
+                    yield x
             elif self.peek()=='#':
-                yield self.read_comment_single()
+                x = self.read_comment_single()
+                if self.comments:
+                    yield x
             elif self.peek(2) == '--':
-                yield self.read_comment_single()
+                x = self.read_comment_single()
+                if self.comments:
+                    yield x
             elif self.peek(2) == '/*':
-                yield self.read_comment_multi()
+                x = self.read_comment_multi()
+                if self.comments:
+                    yield x
             elif self.is_alpha(self.peek()):
                 x = self.read_name()
-                yield x
                 if x.value.upper()=='DELIMITER':
-                    if self.is_whitespace(self.peek()):
-                        yield self.read_whitespace()
+                    self.read_whitespace()
                     x = SQLToken(self,self.DELIMITER)
                     c = self.peek()
                     while c and not self.is_whitespace(c):
                         x.value += self.read()
                         c = self.peek()
                     self.delimiter = x.value
-                    yield x
-#                    print(' !!! ', self.delimiter)
+                yield x
             elif self.is_digit(self.peek()):
                 yield self.read_number()
             elif self.peek() in ("'",'"','`'):
                 yield self.read_quoted()
+            elif self.peek()=='.':
+                yield SQLToken(self, self.DOT, self.read())
+            elif self.peek()==',':
+                yield SQLToken(self, self.COMMA, self.read())
+            elif self.peek()==':':
+                yield SQLToken(self, self.COLON, self.read())
+            elif self.peek()==';':
+                yield SQLToken(self, self.SEMICOLON, self.read())
             elif self.peek() in ('(',')'):
-                v = self.peek()
-                x = SQLToken(self, v, v)
-                self.read()
-                yield x
-            elif self.peek(2) in (('<='),('>='),('!='),('<>'),('+=')):
-                v = self.peek(2)
-                x = SQLToken(self, v, v)
-                self.read(2)
-                yield x
+                yield SQLToken(self, '()', self.read())
+            elif self.peek(2) in ('!=','<>','<=','>=','+='):
+                yield SQLToken(self, 'X2', self.read(2))
+            elif self.peek() in ('=','+','-','*','/'):
+                yield SQLToken(self, 'X1', self.read())
             else:
                 x = SQLToken(self, '?')
-                x.value = self.read()
+                c = self.peek()
+                while c and not self.is_whitespace(c):
+                    x.value += self.read()
+                    c = self.peek()
                 yield x
-
-    def iter_stmts(self):
-        tokens = []
-        for x in self.iter_tokens():
-            if x.ttype==self.WHITESPACE and not tokens:
-                continue
-            tokens.append(x)
-            if x.ttype==self.DELIMITER:
-                yield tokens
-                tokens = []
-        if tokens:
-            yield tokens
 
