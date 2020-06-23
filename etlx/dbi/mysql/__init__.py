@@ -1,4 +1,4 @@
-from .dbi import MySQL_DBI
+from .dbi import DBI_MySQL
 from .metadata import MySQLMetadataMixIn
 
-DBI = MySQL_DBI
+DBI = DBI_MySQL

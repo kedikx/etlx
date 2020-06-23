@@ -1,8 +1,9 @@
+from etlx.abc.row import RowDict
 import MySQLdb
 
-class MySQL_DBI:
+class DBI_MySQL:
 
-    def __init__(self, connect):
+    def __init__(self, *, connect):
         self._connect_kwargs = dict()
         self._connect_kwargs.update(connect)
         self._dbapi = None
@@ -12,26 +13,23 @@ class MySQL_DBI:
     def database(self):
         return self._connect_kwargs.get('database')
 
-    def _kwargs(self, config, kwargs):
-        result = dict()
-        result.update(config)
-        result.update(kwargs)
-        result = filter(lambda x: bool(x[1]), result.items())
-        result = dict(result)
-        return result
+    @property
+    def connected(self):
+        return self._dbapi is not None
 
     def connect(self, **kwargs):
-        kwargs = self._kwargs(self._connect_kwargs,kwargs)
-        self._dbapi = MySQLdb.connect(**kwargs)
+        params = dict()
+        params.update(self._connect_kwargs)
+        params.update(kwargs)
+        params = filter(lambda x: bool(x[1]), params.items())
+        params = dict(params)
+        self._dbapi = MySQLdb.connect(**params)
     
     def close(self):
         if self._dbapi:
             self._dbapi.close()
             self._dbapi = None
 
-    def cursor(self):
-        return self._dbapi.cursor(cursorclass=MySQLdb.cursors.SSCursor)
-    
     def commit(self):
         self._dbapi.commit()
 
@@ -39,36 +37,32 @@ class MySQL_DBI:
         if self._dbapi:
             self._dbapi.rollback()
 
-    def execute(self, sql):
+    def cursor(self, sql, *args, **kwargs):
         if not isinstance(sql,str):
             sql = str(sql)
-        with self.cursor() as cursor:
-            cursor.execute(sql)
-
-    def query(self, sql):
-        if not isinstance(sql,str):
-            sql = str(sql)
-        cursor = self.cursor()
+        cursor = self._dbapi.cursor(cursorclass=MySQLdb.cursors.SSCursor)
         try:
-            cursor.execute(sql)
-            return iter(cursor)
+            cursor.execute(sql, args or kwargs)
         except:
             cursor.close()
             raise
+        return cursor
+    
+    def execute(self, sql, *args, **kwargs):
+        with self.cursor(sql, *args, **kwargs) as cursor:
+            return cursor.lastrowid
 
-    def queryOne(self, sql):
-        if not isinstance(sql,str):
-            sql = str(sql)
-        with self.cursor() as cursor:
-            cursor.execute(sql)
-            return cursor.fetchone()
+    def query(self, sql, *args, **kwargs):
+        with self.cursor(sql, *args, **kwargs) as cursor:
+            for row in cursor:
+                yield RowDict((d[0],v) for d, v in zip(cursor.description, row))
 
-    def queryList(self, sql):
-        if not isinstance(sql,str):
-            sql = str(sql)
-        with self.cursor() as cursor:
-            cursor.execute(sql)
-            return list(iter(cursor))
+    def readone(self, sql, *args, **kwargs):
+        with self.cursor(sql, *args, **kwargs) as cursor:
+            row = cursor.fetchone()
+            if row:
+                row = RowDict((d[0],v) for d, v in zip(cursor.description, row))
+            return row
 
     def __enter__(self):
         if not self._dbapi:
@@ -85,3 +79,22 @@ class MySQL_DBI:
             self.commit()
         if self._close_on_exit:
             self.close()
+
+
+if __name__ == "__main__":
+    from etlx.abc.row import RowDict
+
+    dbi = DBI_MySQL(connect=dict(host='localhost', user='test', password='test', database='test'))
+    with dbi:
+        with dbi.cursor('SELECT * FROM test') as cursor:
+            for row in cursor:
+                row = RowDict((d[0],v) for d, v in zip(cursor.description, row))
+                print(row)
+
+    with dbi:
+        x = dbi.execute('INSERT INTO test () VALUES ()')
+        print(x)
+
+    with dbi:
+        row = dbi.readone('SELECT * FROM test WHERE ID=%(ID)s', ID=1)
+        print(row)
