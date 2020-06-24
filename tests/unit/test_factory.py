@@ -46,8 +46,8 @@ class TestFunc(TestCase):
         services = ServiceFactory()
         with self.assertRaises(ValueError):
             services.add('AAA', 'aaabbbccc')
-        with self.assertRaises(ValueError):
-            services.add('BBB', 'etlx.not_callable')
+        with self.assertRaises(AttributeError):
+            services.add('BBB', 'etlx.not_exist')
 
     def test1(self):
         path = self.getTestDataPath('services.yml')
