@@ -7,7 +7,7 @@ class DummyService:
     def __init__(self, **kwargs):
         self.kwargs = kwargs
 
-class TestFunc(TestCase):
+class Test_ServiceFactory(TestCase):
     
     def test0(self):
         services = ServiceFactory()

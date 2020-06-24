@@ -1,7 +1,7 @@
 import unittest
 from tests import TestCase
 
-class TestFunc(TestCase):
+class Test_Dummy(TestCase):
 
     def test0_getTestDataPath(self):
         sharedDir = self.getTestDir(local=False)

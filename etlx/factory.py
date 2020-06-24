@@ -23,7 +23,6 @@ class ServiceFactory:
             return
         config = loadYAML(config)
         for name, kwargs in config.items():
-            print(name, kwargs)
             if isinstance(kwargs, str):
                 self.add(name, factory=kwargs)
             else:
