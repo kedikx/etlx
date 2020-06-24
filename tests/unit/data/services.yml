@@ -1,0 +1,12 @@
+TEST:
+    factory: null
+    connect:
+        host: localhost
+        user: test
+
+TEST_2:
+    factory: TEST
+    connect:
+        user: test2
+
+ALIAS: TEST

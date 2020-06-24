@@ -1,6 +1,6 @@
 # .coveragerc to control coverage.py
 [run]
-source = etlx,tests
+source = etlx
 branch = True
 cover_pylib = False
 
