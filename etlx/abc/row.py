@@ -1,6 +1,7 @@
 from collections import OrderedDict
 
 class RowDict(OrderedDict):
+    
     def __init__(self, *args, **kwargs):
         self.update(*args, **kwargs)
     
@@ -15,4 +16,3 @@ class RowDict(OrderedDict):
 
     def __getattr__(self, key):
         return self[key]
-

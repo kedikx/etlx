@@ -1,7 +1,7 @@
 from etlx.abc.row import RowDict
 import MySQLdb
 
-class DBI_MySQL:
+class MySQL_DBI_MySQLdb:
 
     def __init__(self, *, connect):
         self._connect_kwargs = dict()

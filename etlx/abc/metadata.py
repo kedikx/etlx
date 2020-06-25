@@ -55,19 +55,6 @@ class MetadataMixIn:
             table._indexes.__setitem__ = None
         return tables
 
-    def queryMetadata(self, sql):
-        #print(sql)
-        cursor = self.cursor()
-        cursor.execute(sql)
-        try:
-            columns = None
-            for raw in cursor:
-                if not columns:
-                    columns = [c[0].upper() for c in cursor.description]
-                yield OrderedDict(zip(columns,raw))
-        finally:
-            cursor.close()
-
     def queryColumns(self, *, table=None, TABLE_CATALOG=None, TABLE_SCHEMA=None):
         if isinstance(table,Table):
             table = table.name

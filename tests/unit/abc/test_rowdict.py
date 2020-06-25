@@ -1,9 +1,9 @@
 from etlx.abc import RowDict
 
 import unittest
-#from tests import TestCase
+from tests import TestCase
 
-class Test_abc_RowDict(unittest.TestCase):
+class Test_RowDict(TestCase):
 
     def test01_interface_obj(self):
         x = RowDict()
