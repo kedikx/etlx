@@ -19,8 +19,11 @@ class SQL:
         self.buffer.write(sql)
         return self
 
-    def quoted(self, name):
-        return self.sql('`'+name.replace('`','``')+'`')
+    def quoted(self, *args):
+        for i, name in enumerate(args):
+            self.sql(',' if i else '')
+            self.sql('`'+name.replace('`','``')+'`')
+        return self
 
     def arg(self):
         return self.sql('%s')
@@ -41,6 +44,7 @@ class SQL:
                 self.sql("'").sql(str(value)).sql("'")
             elif isinstance(value,str):
                 value = value.replace("'","''")
+                value = value.replace("%","%%")
                 self.sql("'").sql(value).sql("'")
             elif isinstance(value,tuple):
                 self.sql("(").literal(*value).sql(")")
@@ -71,7 +75,7 @@ class SQL:
     def WHERE(self, **kwargs):
         self.sql(' WHERE ')
         for i, (k,v) in enumerate(kwargs.items()):
-            self.sql(',' if i else '')
+            self.sql(' AND ' if i else '')
             self.quoted(k).sql('=').literal(v)
         return self
 
@@ -95,47 +99,27 @@ class SQL:
         self.sql(') ')
         return self
 
-    def INSERT_ARGS(self, table, columns):
-        self.sql('INSERT INTO ')
-        self.quoted(table)
-        self.sql('(')
-        self._list(self.quoted, columns)
-        self.sql(') VALUES (' )
-        self._list(self.arg, columns)
-        self.sql(')')
+    def INSERT(self, table, **kwargs):
+        self.sql('INSERT INTO ').quoted(table)
+        self.sql(' (').quoted(*kwargs.keys()).sql(') VALUES (' ).literal(*kwargs.values()).sql(')')
         return self
 
-    def INSERT(self, table, columns, values):
-        self.sql('INSERT INTO ')
-        self.quoted(table)
-        self.sql(' (')
-        self._list(self.quoted, columns)
-        self.sql(') VALUES (' )
-        self._list(self.literal, values)
-        self.sql(')')
+    def INSERT_CV(self, table, columns, values):
+        self.sql('INSERT INTO ').quoted(table)
+        self.sql(' (').quoted(*columns).sql(') VALUES (' ).literal(*values).sql(')')
         return self
 
-    def UPDATE(self, table):
-        self.sql('UPDATE ')
-        self.quoted(table)
-        self.sql(' ')
+    def UPDATE(self, table, **kwargs):
+        self.sql('UPDATE ').quoted(table).sql(' SET ')
+        for i, (k, v) in enumerate(kwargs.items()):
+            self.sql(',' if i else '')
+            self.quoted(k).sql('=').literal(v)
         return self
 
-    def SET(self, **kwargs):
-        def setPair(x):
-            self.quoted(x[0])
-            self.sql('=')
-            self.literal(x[1])
-        self.sql('SET ')
-        self._list( setPair, kwargs.items())
-        return self
-
-    def SET_CV(self, columns, values):
-        def setPair(x):
-            self.quoted(x[0])
-            self.sql('=')
-            self.literal(x[1])
-        self.sql('SET ')
-        self._list( setPair, zip(columns,values))
+    def UPDATE_CV(self, table, columns, values):
+        self.sql('UPDATE ').quoted(table).sql(' SET ')
+        for i, (k, v) in enumerate(zip(columns,values)):
+            self.sql(',' if i else '')
+            self.quoted(k).sql('=').literal(v)
         return self
 

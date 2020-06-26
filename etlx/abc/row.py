@@ -16,3 +16,9 @@ class RowDict(OrderedDict):
 
     def __getattr__(self, key):
         return self[key]
+
+def rowExtract(x, columns):
+    return RowDict((cname,x.get(cname)) for cname in columns)
+
+def rowTuple(x, columns):
+    return tuple(x.get(cname) for cname in columns)
