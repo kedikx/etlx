@@ -15,6 +15,8 @@ class RowDict(OrderedDict):
             self[key] = value
 
     def __getattr__(self, key):
+        if key not in self:
+            raise AttributeError(key)
         return self[key]
 
 def rowExtract(x, columns):
