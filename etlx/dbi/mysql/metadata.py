@@ -1,6 +1,8 @@
 from collections import OrderedDict
 from itertools import groupby
-from etlx.abc import Table, Column, Index, MetadataMixIn
+
+from etlx.abc import Column, Index, MetadataMixIn, Table
+
 
 class MySQL_Table(Table):
     

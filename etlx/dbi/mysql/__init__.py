@@ -1,5 +1,5 @@
-from .dbi import MySQL_DBI_MySQLdb
-from .metadata import MySQL_MetadataMixIn
+from etlx.dbi.mysql.dbi import MySQL_DBI_MySQLdb
+from etlx.dbi.mysql.metadata import MySQL_MetadataMixIn
 
 class MySQL_DBI(MySQL_MetadataMixIn, MySQL_DBI_MySQLdb):
     pass

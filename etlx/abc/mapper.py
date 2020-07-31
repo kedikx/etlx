@@ -8,11 +8,17 @@ class RowMapper(OrderedDict):
         #result = map(lambda x: x(row), self.values())
         return RowDict((k,f(row)) for k,f in self.items())
 
+class ExtractAttr:
+    def __init__(self,key):
+        self.key = key
+    def __call__(self,row):
+        return getattr(row, self.key, None)
+
 class ExtractItem:
     def __init__(self,key):
         self.key = key
     def __call__(self,row):
-        return row[self.key]
+        return row.get(self.key, None)
 
 class ExtractConst:
     def __init__(self,value):

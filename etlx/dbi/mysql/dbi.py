@@ -1,5 +1,6 @@
-from etlx.abc.row import RowDict
 import MySQLdb
+
+from etlx.abc.row import RowDict
 
 class MySQL_DBI_MySQLdb:
 
@@ -82,9 +83,7 @@ class MySQL_DBI_MySQLdb:
 
 
 if __name__ == "__main__":
-    from etlx.abc.row import RowDict
-
-    dbi = DBI_MySQL(connect=dict(host='localhost', user='test', password='test', database='test'))
+    dbi = MySQL_DBI_MySQLdb(connect=dict(host='localhost', user='test', password='test', database='test'))
     with dbi:
         with dbi.cursor('SELECT * FROM test') as cursor:
             for row in cursor:

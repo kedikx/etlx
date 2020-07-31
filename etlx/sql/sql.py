@@ -3,7 +3,8 @@ from decimal import Decimal
 from datetime import datetime, date, time
 
 class SQL:
-    def __init__(self):
+    def __init__(self, dbi=None):
+        self.dbi = dbi
         self.buffer = StringIO()
 
     def __len__(self):
@@ -14,6 +15,12 @@ class SQL:
 
     def __bool__(self):
         return len(self)>0
+
+    def execute(self, *args, **kwargs):
+        return self.dbi.execute(self, *args, **kwargs)
+
+    def query(self, *args, **kwargs):
+        return self.dbi.query(self, *args, **kwargs)
 
     def sql(self, sql):
         self.buffer.write(sql)
@@ -121,5 +128,9 @@ class SQL:
         for i, (k, v) in enumerate(zip(columns,values)):
             self.sql(',' if i else '')
             self.quoted(k).sql('=').literal(v)
+        return self
+
+    def DELETE(self, table):
+        self.sql('DELETE FROM ').quoted(table).sql(' ')
         return self
 
