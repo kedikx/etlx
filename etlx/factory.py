@@ -63,7 +63,7 @@ class ServiceFactory:
         funcName = s[-1:][0]
         if not moduleName or not funcName:
             return None
-        module = import_module(name=moduleName, package='etlx')
+        module = import_module(name=moduleName)
         return getattr(module,funcName)
 
     def __getitem__(self, name):
