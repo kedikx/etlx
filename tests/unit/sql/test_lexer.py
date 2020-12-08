@@ -28,7 +28,7 @@ class Test_sql_SQLLexer(unittest.TestCase):
         self.assertEqual(x.col, 8)
 
     def test1_num(self):
-        sql = """12
+        sql = """12 
         3.14 987654321"""
         lexer = SQLLexer(sql)
         tokens = list(lexer)
