@@ -3,12 +3,12 @@
 import os
 import setuptools
 
-with open("README.md", "r") as f:
+with open('README.md', 'r') as f:
     README = f.read()
-with open("VERSION", "r") as f:
+with open('VERSION', 'r') as f:
     VERSION = f.read()
-with open('etlx/build.py','w') as f:
-    GITHUB_WORKFLOW  = os.environ.get('GITHUB_REF')
+with open('etlx/build.py', 'w') as f:
+    GITHUB_WORKFLOW = os.environ.get('GITHUB_REF')
     if GITHUB_WORKFLOW:
         GITHUB_REF = os.environ.get('GITHUB_REF')
         GITHUB_RUN_NUMBER = os.environ.get('GITHUB_RUN_NUMBER')
@@ -16,7 +16,7 @@ with open('etlx/build.py','w') as f:
         f.write(f"GITHUB_REF='{GITHUB_REF}'\n")
         f.write(f"GITHUB_RUN_NUMBER='{GITHUB_RUN_NUMBER}'\n")
     else:
-        CI_BUILD_ID = os.environ.get('CI_BUILD_ID',0)
+        CI_BUILD_ID = os.environ.get('CI_BUILD_ID', 0)
         VERSION += str(CI_BUILD_ID)
     f.write(f"__version__='{VERSION}'\n")
 
@@ -27,7 +27,7 @@ setuptools.setup(
     author_email="kedikx.io@gmail.com",
     description="ETL & Co",
     long_description=README,
-#    long_description_content_type="text/markdown",
+    # long_description_content_type="text/markdown",
     url="https://github.com/kedikx/etlx",
     packages=setuptools.find_packages(),
     classifiers=[

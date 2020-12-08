@@ -1,5 +1,6 @@
-from etlx import __version__
+from etlx import __version__ # noqa
 from tests import TestCase
+
 
 class TestFunc(TestCase):
 
@@ -14,4 +15,4 @@ class TestFunc(TestCase):
 
     def test1_loadTestData(self):
         data = self.loadTestData('dummy.txt')
-        self.assertEqual(data,'DUMMY')
+        self.assertEqual(data, 'DUMMY')

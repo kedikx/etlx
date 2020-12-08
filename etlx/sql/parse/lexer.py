@@ -1,24 +1,27 @@
 from collections import deque
 
+
 class SQLToken:
+
     def __init__(self, lexer, ttype, value=''):
         self.line = lexer.line
         self.col = lexer.col
         self.ttype = ttype
         self.value = value
 
+
 class SQLLexer:
 
     WHITESPACE = 'WHITESPACE'
-    COMMENT    = 'COMMENT'
-    NAME       = 'NAME'
-    QUOTED     = 'QUOTED'
-    INT        = 'INT'
-    FLOAT      = 'FLOAT'
-    CHAR       = 'CHAR'
-    COMMA      = ','
-    DOT        = '.'
-    EOS        = ';'
+    COMMENT = 'COMMENT'
+    NAME = 'NAME'
+    QUOTED = 'QUOTED'
+    INT = 'INT'
+    FLOAT = 'FLOAT'
+    CHAR = 'CHAR'
+    COMMA = ','
+    DOT = '.'
+    EOS = ';'
 
     def __init__(self, sql, whitespaces=True):
         self.itr = iter(sql)
