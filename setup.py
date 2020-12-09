@@ -9,19 +9,16 @@ with open('VERSION', 'r') as f:
     VERSION = f.read()
 with open('etlx/build.py', 'w') as f:
     GITHUB_WORKFLOW = os.environ.get('GITHUB_WORKFLOW')
-    if GITHUB_WORKFLOW:
-        GITHUB_REF = os.environ.get('GITHUB_REF')
+    if GITHUB_WORKFLOW=='etx-release':
+        pass
+    elif GITHUB_WORKFLOW=='etx-build':
         GITHUB_RUN_NUMBER = os.environ.get('GITHUB_RUN_NUMBER')
-        print(GITHUB_WORKFLOW)
-        print(GITHUB_RUN_NUMBER)
-        print(GITHUB_REF)
-        if GITHUB_REF != 'refs/heads/master':
-            VERSION += f'.dev{GITHUB_RUN_NUMBER}'
+        VERSION += f'.dev{GITHUB_RUN_NUMBER}'
     else:
         CI_BUILD_ID = os.environ.get('CI_BUILD_ID', 0)
-        VERSION += str(CI_BUILD_ID)
-    f.write(f"__version__='{VERSION}'\n")
+        VERSION += f'.dev{CI_BUILD_ID}'
     print('build verion', VERSION)
+    f.write(f"__version__='{VERSION}'\n")
 
 setuptools.setup(
     name="etlx",
@@ -30,7 +27,7 @@ setuptools.setup(
     author_email="kedikx.io@gmail.com",
     description="ETL & Co",
     long_description=README,
-    # long_description_content_type="text/markdown",
+    #long_description_content_type="text/markdown",
     url="https://github.com/kedikx/etlx",
     packages=setuptools.find_packages(),
     classifiers=[
