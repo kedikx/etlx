@@ -9,9 +9,10 @@ with open('VERSION', 'r') as f:
     VERSION = f.read()
 with open('etlx/build.py', 'w') as f:
     GITHUB_WORKFLOW = os.environ.get('GITHUB_WORKFLOW')
-    if GITHUB_WORKFLOW=='etx-release':
+    print('GITHUB_WORKFLOW', GITHUB_WORKFLOW)
+    if GITHUB_WORKFLOW == 'etx-release':
         pass
-    elif GITHUB_WORKFLOW=='etx-build':
+    elif GITHUB_WORKFLOW == 'etx-build':
         GITHUB_RUN_NUMBER = os.environ.get('GITHUB_RUN_NUMBER')
         VERSION += f'.dev{GITHUB_RUN_NUMBER}'
     else:
