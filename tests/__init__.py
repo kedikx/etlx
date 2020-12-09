@@ -2,6 +2,7 @@ import unittest
 import os
 import inspect
 
+
 class TestCase(unittest.TestCase):
     """Base class for unittest style tests"""
 
@@ -29,4 +30,3 @@ class TestCase(unittest.TestCase):
         path = cls.getTestDataPath(relativePath, local)
         with open(path,'r') as f:
             return f.read()
-

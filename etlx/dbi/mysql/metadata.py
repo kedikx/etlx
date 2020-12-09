@@ -1,6 +1,5 @@
 from collections import OrderedDict
 from itertools import groupby
-
 from etlx.abc import Column, Index, MetadataMixIn, Table
 
 
@@ -17,6 +16,7 @@ class MySQL_Column(Column):
     def database(self):
         return self.metadata.get('TABLE_SCHEMA')
 
+
 class MySQL_Index(Index):
 
     @property
@@ -25,7 +25,7 @@ class MySQL_Index(Index):
 
     @property
     def primary(self):
-        return self.name=='PRIMARY'
+        return self.name == 'PRIMARY'
 
     @property
     def unique(self):
