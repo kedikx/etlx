@@ -1,6 +1,7 @@
 import unittest
 from tests import TestCase
 
+
 class Test_Dummy(TestCase):
 
     def test0_getTestDataPath(self):
@@ -22,10 +23,10 @@ class Test_Dummy(TestCase):
 
     def test1_loadTestData(self):
         data = self.loadTestData('dummy.txt', local=False)
-        self.assertEqual(data,'DUMMY')
+        self.assertEqual(data, 'DUMMY')
 
         data = self.loadTestData('dummy.txt')
-        self.assertEqual(data,'DUMMY.LOCAL')
+        self.assertEqual(data, 'DUMMY.LOCAL')
 
 
 if __name__ == "__main__":

@@ -22,4 +22,3 @@ class Column:
         if self._metadata is None or name not in self._metadata:
             raise AttributeError('no metadata available')
         return self._metadata[name]
-

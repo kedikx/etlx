@@ -5,6 +5,7 @@ from etlx.abc.mapper import RowMapper, ExtractItem, ExtractConst, Datetime
 import unittest
 from tests import TestCase
 
+
 class Test_Mapper(TestCase):
 
     def test_0(self):
@@ -22,9 +23,9 @@ class Test_Mapper(TestCase):
         self.assertEqual(x.a, 1)
         self.assertEqual(x.b, 2)
         self.assertEqual(x.c, 3)
-        self.assertEqual(x.dt, datetime(2020,6,25,3,42,5))
+        self.assertEqual(x.dt, datetime(2020, 6, 25, 3, 42, 5))
         self.assertEqual(x.dt2, 2020)
 
 
 if __name__ == "__main__":
-    unittest.main()    
+    unittest.main()

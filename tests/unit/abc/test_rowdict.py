@@ -3,6 +3,7 @@ from etlx.abc.row import RowDict, rowExtract, rowTuple
 import unittest
 from tests import TestCase
 
+
 class Test_RowDict(TestCase):
 
     def test01_interface_obj(self):
@@ -35,22 +36,22 @@ class Test_RowDict(TestCase):
         self.assertEqual(x.A, 'A')
         self.assertEqual(x.B, 'B')
 
-
     def test14_rowExtract(self):
         x = RowDict()
-        x.update({'A':'A', 'B':'B'})
+        x.update({'A': 'A', 'B': 'B'})
 
-        y = rowExtract(x, ['A','B','C'])
-        self.assertEqual(y.A,'A')
-        self.assertEqual(y.B,'B')
+        y = rowExtract(x, ['A', 'B', 'C'])
+        self.assertEqual(y.A, 'A')
+        self.assertEqual(y.B, 'B')
         self.assertIsNone(y.C)
 
     def test14_rowTuple(self):
         x = RowDict()
-        x.update({'A':'A', 'B':'B'})
+        x.update({'A': 'A', 'B': 'B'})
 
-        y = rowTuple(x, ['A','B','C'])
-        self.assertEqual(y, ('A','B', None))
+        y = rowTuple(x, ['A', 'B', 'C'])
+        self.assertEqual(y, ('A', 'B', None))
+
 
 if __name__ == "__main__":
-    unittest.main()    
+    unittest.main()

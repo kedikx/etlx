@@ -1,6 +1,7 @@
 
 from .column import Column
 
+
 class Index:
 
     def __init__(self, columns, *, name=None, table=None, metadata=None):
@@ -20,7 +21,7 @@ class Index:
     @property
     def primary(self):
         return None
-    
+
     @property
     def unique(self):
         return None

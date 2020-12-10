@@ -1,6 +1,6 @@
 import MySQLdb
-
 from etlx.abc.row import RowDict
+
 
 class MySQL_DBI_MySQLdb:
 
@@ -25,7 +25,7 @@ class MySQL_DBI_MySQLdb:
         params = filter(lambda x: bool(x[1]), params.items())
         params = dict(params)
         self._dbapi = MySQLdb.connect(**params)
-    
+
     def close(self):
         if self._dbapi:
             self._dbapi.close()
@@ -39,16 +39,16 @@ class MySQL_DBI_MySQLdb:
             self._dbapi.rollback()
 
     def cursor(self, sql, *args, **kwargs):
-        if not isinstance(sql,str):
+        if not isinstance(sql, str):
             sql = str(sql)
         cursor = self._dbapi.cursor(cursorclass=MySQLdb.cursors.SSCursor)
         try:
             cursor.execute(sql, args or kwargs)
-        except:
+        except Exception:
             cursor.close()
             raise
         return cursor
-    
+
     def execute(self, sql, *args, **kwargs):
         with self.cursor(sql, *args, **kwargs) as cursor:
             return cursor.lastrowid
@@ -56,13 +56,13 @@ class MySQL_DBI_MySQLdb:
     def query(self, sql, *args, **kwargs):
         with self.cursor(sql, *args, **kwargs) as cursor:
             for row in cursor:
-                yield RowDict((d[0],v) for d, v in zip(cursor.description, row))
+                yield RowDict((d[0], v) for d, v in zip(cursor.description, row))
 
     def readone(self, sql, *args, **kwargs):
         with self.cursor(sql, *args, **kwargs) as cursor:
             row = cursor.fetchone()
             if row:
-                row = RowDict((d[0],v) for d, v in zip(cursor.description, row))
+                row = RowDict((d[0], v) for d, v in zip(cursor.description, row))
             return row
 
     def __enter__(self):
@@ -87,7 +87,7 @@ if __name__ == "__main__":
     with dbi:
         with dbi.cursor('SELECT * FROM test') as cursor:
             for row in cursor:
-                row = RowDict((d[0],v) for d, v in zip(cursor.description, row))
+                row = RowDict((d[0], v) for d, v in zip(cursor.description, row))
                 print(row)
 
     with dbi:

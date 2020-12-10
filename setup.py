@@ -28,7 +28,7 @@ setuptools.setup(
     author_email="kedikx.io@gmail.com",
     description="ETL & Co",
     long_description=README,
-    #long_description_content_type="text/markdown",
+    # long_description_content_type="text/markdown",
     url="https://github.com/kedikx/etlx",
     packages=setuptools.find_packages(),
     classifiers=[

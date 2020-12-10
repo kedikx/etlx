@@ -3,12 +3,15 @@ from tests import TestCase
 
 from etlx.factory import ServiceFactory
 
+
 class DummyService:
+
     def __init__(self, **kwargs):
         self.kwargs = kwargs
 
+
 class Test_ServiceFactory(TestCase):
-    
+
     def test0(self):
         services = ServiceFactory()
 
@@ -58,13 +61,14 @@ class Test_ServiceFactory(TestCase):
 
         services.load(path)
         self.assertEqual(len(services.catalog), 3)
-        
+
     def test2(self):
         path = self.getTestDataPath('services.yml')
 
         services = ServiceFactory(path)
         self.assertIsNotNone(services.catalog)
         self.assertEqual(len(services.catalog), 3)
+
 
 if __name__ == "__main__":
     unittest.main()

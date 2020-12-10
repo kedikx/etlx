@@ -4,7 +4,7 @@ from etlx.abc import Column, Index, MetadataMixIn, Table
 
 
 class MySQL_Table(Table):
-    
+
     @property
     def database(self):
         return self.metadata.get('TABLE_SCHEMA')
@@ -29,8 +29,8 @@ class MySQL_Index(Index):
 
     @property
     def unique(self):
-        return self.metadata.get('NON_UNIQUE')==0
-        
+        return self.metadata.get('NON_UNIQUE') == 0
+
 
 class MySQL_MetadataMixIn(MetadataMixIn):
 
@@ -78,10 +78,10 @@ class MySQL_MetadataMixIn(MetadataMixIn):
             columns = OrderedDict()
             for row in group:
                 if idxRow is None:
-                    keys = ('TABLE_SCHEMA','TABLE_NAME','INDEX_NAME','NON_UNIQUE','INDEX_TYPE', 'INDEX_COMMENT')
-                    idxRow = OrderedDict((k,row.get(k)) for k in keys)
+                    keys = ('TABLE_SCHEMA', 'TABLE_NAME', 'INDEX_NAME', 'NON_UNIQUE', 'INDEX_TYPE', 'INDEX_COMMENT')
+                    idxRow = OrderedDict((k, row.get(k)) for k in keys)
                 COLUMN_NAME = row['COLUMN_NAME']
-                columns[COLUMN_NAME]=row
+                columns[COLUMN_NAME] = row
             columns.__setitem__ = None
             index = self.Index(name=INDEX_NAME, columns=columns, table=TABLE_NAME, metadata=idxRow)
             result.append(index)

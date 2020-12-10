@@ -4,11 +4,12 @@ from copy import deepcopy
 from importlib import import_module
 from collections import OrderedDict
 
+
 class ServiceFactory:
-    
+
     def __init__(self, configFile=None):
         self.configFile = configFile
-        self._catalog  = None
+        self._catalog = None
 
     @property
     def catalog(self) -> Mapping:
@@ -33,10 +34,10 @@ class ServiceFactory:
         if self._catalog is None:
             self._catalog = OrderedDict()
         if isinstance(factory, str):
-            entry = self._catalog.get(factory,None)
+            entry = self._catalog.get(factory, None)
             if entry:
                 factory = entry[0]
-                kwargs  = self.mergeArgs(entry[1], **kwargs)
+                kwargs = self.mergeArgs(entry[1], **kwargs)
             else:
                 func = self.findCallable(factory)
                 if not callable(func):
@@ -49,8 +50,8 @@ class ServiceFactory:
         result = deepcopy(base)
         # adjust params
         for k, v in kwargs.items():
-            c = result.get(k,None)
-            if isinstance(c,dict) and isinstance(v,dict):
+            c = result.get(k, None)
+            if isinstance(c, dict) and isinstance(v, dict):
                 c.update(v)
             else:
                 result[k] = v
@@ -64,7 +65,7 @@ class ServiceFactory:
         if not moduleName or not funcName:
             return None
         module = import_module(name=moduleName)
-        return getattr(module,funcName)
+        return getattr(module, funcName)
 
     def __getitem__(self, name):
         entry = self.catalog[name]
@@ -72,6 +73,7 @@ class ServiceFactory:
 
     def __getattr__(self, name):
         entry = self.catalog[name]
+
         def factory(**kwargs):
             kwargs = self.mergeArgs(entry[1], **kwargs)
             return entry[0](**kwargs)
@@ -81,10 +83,11 @@ class ServiceFactory:
 def loadYAML(filePath) -> Mapping:
     """Loads yaml as OrderedDict"""
     class Loader(yaml.SafeLoader):
-            pass
+        pass
+
     def constructMapping(loader, node):
         loader.flatten_mapping(node)
         return OrderedDict(loader.construct_pairs(node))
-    Loader.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,constructMapping)
+    Loader.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, constructMapping)
     with open(filePath) as file:
         return yaml.load(file, Loader)

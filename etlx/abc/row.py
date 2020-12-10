@@ -1,10 +1,11 @@
 from collections import OrderedDict
 
+
 class RowDict(OrderedDict):
-    
+
     def __init__(self, *args, **kwargs):
         self.update(*args, **kwargs)
-    
+
     def update(self, *args, **kwargs):
         for seq in args:
             if isinstance(seq, dict):
@@ -19,8 +20,10 @@ class RowDict(OrderedDict):
             raise AttributeError(key)
         return self[key]
 
+
 def rowExtract(x, columns):
-    return RowDict((cname,x.get(cname)) for cname in columns)
+    return RowDict((cname, x.get(cname)) for cname in columns)
+
 
 def rowTuple(x, columns):
     return tuple(x.get(cname) for cname in columns)

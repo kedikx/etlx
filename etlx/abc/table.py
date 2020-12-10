@@ -1,7 +1,7 @@
-from typing import Mapping, Optional
 from collections import OrderedDict
 from .column import Column
 from .index import Index
+
 
 class Table:
 
@@ -12,7 +12,7 @@ class Table:
         self._columns = None
         self._indexes = None
         self._primaryIndex = None
-    
+
     @property
     def name(self):
         return self._name
@@ -20,11 +20,11 @@ class Table:
     @property
     def dbi(self):
         return self._dbi
-    
+
     @property
     def metadata(self):
         return self._metadata or {}
-    
+
     @property
     def columns(self):
         if self._columns is None:
@@ -53,7 +53,7 @@ class Table:
 
     def readColumns(self):
         result = OrderedDict()
-        if self.dbi and hasattr(self.dbi,'queryColumns'):
+        if self.dbi and hasattr(self.dbi, 'queryColumns'):
             for column in self.dbi.queryColumns(table=self):
                 column._parent = self
                 result[column.name] = column
@@ -62,7 +62,7 @@ class Table:
 
     def readIndexes(self):
         result = OrderedDict()
-        if self.dbi and hasattr(self.dbi,'queryIndexes'):
+        if self.dbi and hasattr(self.dbi, 'queryIndexes'):
             for index in self.dbi.queryIndexes(table=self):
                 index._parent = self
                 result[index.name] = index
