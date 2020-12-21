@@ -25,6 +25,8 @@ class ExtractItem:
         self.key = key
 
     def __call__(self, row):
+        if isinstance(row, (list,tuple)):
+            return row[self.key]
         return row.get(self.key, None)
 
 
