@@ -50,6 +50,7 @@ class Test_sql_SQLLexer(unittest.TestCase):
         self.assertEqual(x.line,  2)
         self.assertEqual(x.col,  9)
 
+    @unittest.skip("development")
     def test2_num(self):
         sql = """12 -- AAA
         /* 3.14 98765
@@ -57,9 +58,10 @@ class Test_sql_SQLLexer(unittest.TestCase):
         lexer = SQLLexer(sql, False)
         tokens = list(lexer)
         self.assertEqual(len(tokens), 3)
-        for x in tokens:
-            print(x.ttype, x.value[:30])
+#        for x in tokens:
+#            print(x.ttype, x.value[:30])
 
+    @unittest.skip("development")
     def test2_sample_01(self):
         sql = """
     SELECT FirstName, LastName, 

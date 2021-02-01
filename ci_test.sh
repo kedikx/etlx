@@ -4,4 +4,4 @@ set -e
 DIR=`dirname "${BASH_SOURCE[0]}"`
 cd ${DIR}
 # run tests
-coverage run setup.py test
+coverage run -m unittest discover -t . -s tests
