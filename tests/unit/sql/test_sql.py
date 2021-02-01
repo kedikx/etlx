@@ -21,9 +21,9 @@ class Test_SQL(TestCase):
 
     def test_1(self):
         sql = SQL().quoted('test')
-        self.assertEqual(str(sql), '`test`')
-        sql = SQL().quoted('te`st')
-        self.assertEqual(str(sql), '`te``st`')
+        self.assertEqual(str(sql), '"test"')
+        sql = SQL().quoted('te"st')
+        self.assertEqual(str(sql), '"te""st"')
 
         sql = SQL().arg().arg()
         self.assertEqual(str(sql), '%s%s')
@@ -56,10 +56,10 @@ class Test_SQL(TestCase):
 
     def test_SELECT(self):
         sql = SQL().SELECT().FROM('test1')
-        self.assertEqual(str(sql), 'SELECT * FROM `test1` ')
+        self.assertEqual(str(sql), 'SELECT * FROM "test1" ')
 
         sql = SQL().SELECT('a', 'b').FROM('test2')
-        self.assertEqual(str(sql), 'SELECT `a`,`b` FROM `test2` ')
+        self.assertEqual(str(sql), 'SELECT "a","b" FROM "test2" ')
 
 
 if __name__ == "__main__":

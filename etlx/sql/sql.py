@@ -4,6 +4,7 @@ from datetime import datetime, date, time
 
 
 class SQL:
+
     def __init__(self, dbi=None):
         self.dbi = dbi
         self.buffer = StringIO()
@@ -30,7 +31,7 @@ class SQL:
     def quoted(self, *args):
         for i, name in enumerate(args):
             self.sql(',' if i else '')
-            self.sql('`'+name.replace('`', '``') + '`')
+            self.sql('"'+name.replace('"', '""') + '"')
         return self
 
     def arg(self):
@@ -52,7 +53,7 @@ class SQL:
                 self.sql("'").sql(str(value)).sql("'")
             elif isinstance(value, str):
                 value = value.replace("'", "''")
-                value = value.replace("%", "%%")
+                value = value.replace('%', '%%')
                 self.sql("'").sql(value).sql("'")
             elif isinstance(value, tuple):
                 self.sql("(").literal(*value).sql(")")
