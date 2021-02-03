@@ -57,7 +57,7 @@ class Requirements(Command):
                 r.marker = marker
                 requires.append(r)
         with open(self.filname, "w") as f:
-            f.write("\n".join(sorted(map(str, requires)))+"\n")
+            f.write("\n".join(sorted(map(str, requires))) + "\n")
 
 
 setuptools.setup(
@@ -72,6 +72,9 @@ setuptools.setup(
     packages=setuptools.find_packages(exclude=("etlx_tests", "etlx_tests.*")),
     classifiers=[
         "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
