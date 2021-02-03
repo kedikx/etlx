@@ -5,11 +5,11 @@ import setuptools
 
 BASEDIR = os.path.dirname(__file__)
 
-with open(os.path.join(BASEDIR,"README.md"), "r") as f:
+with open(os.path.join(BASEDIR, "README.md"), "r") as f:
     README = f.read()
-with open(os.path.join(BASEDIR,"VERSION"), "r") as f:
+with open(os.path.join(BASEDIR, "VERSION"), "r") as f:
     VERSION = f.read().strip()
-with open(os.path.join(BASEDIR,"etlx","build.py"), "w") as f:
+with open(os.path.join(BASEDIR, "etlx", "build.py"), "w") as f:
     GITHUB_WORKFLOW = os.environ.get("GITHUB_WORKFLOW")
     if GITHUB_WORKFLOW == "etlx-release":
         pass
@@ -30,7 +30,7 @@ setuptools.setup(
     long_description=README,
     # long_description_content_type="text/markdown",
     url="https://github.com/kedikx/etlx",
-    packages=setuptools.find_packages(exclude=("tests", "tests.*")),
+    packages=setuptools.find_packages(exclude=("etlx_tests", "etlx_tests.*")),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

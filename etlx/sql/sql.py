@@ -65,7 +65,7 @@ class SQL:
             self.sql(separator if i else "")
             func(x)
 
-    def SELECT(self, *args):
+    def SELECT(self, *args, **kwargs):
         self.sql("SELECT ")
         if not args:
             self.sql("*")
@@ -73,8 +73,10 @@ class SQL:
             self._list(self.quoted, args)
         return self
 
-    def FROM(self, table):
+    def FROM(self, table, database=None):
         self.sql(" FROM ")
+        if database:
+            self.quoted(database).sql('.')
         self.quoted(table)
         return self
 

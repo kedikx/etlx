@@ -2,7 +2,7 @@ from datetime import datetime  # , date, time
 from etlx.sql import SQL
 
 import unittest
-from tests import TestCase
+from etlx_tests import TestCase
 
 
 class Test_SQL(TestCase):

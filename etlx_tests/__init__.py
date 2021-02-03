@@ -6,7 +6,7 @@ import inspect
 class TestCase(unittest.TestCase):
     """Base class for unittest style tests"""
 
-    DATA_DIR_NAME = 'data'
+    DATA_DIR_NAME = "data"
 
     @classmethod
     def getTestDir(cls, local=True) -> str:
@@ -28,5 +28,5 @@ class TestCase(unittest.TestCase):
     @classmethod
     def loadTestData(cls, relativePath, local=True):
         path = cls.getTestDataPath(relativePath, local)
-        with open(path, 'r') as f:
+        with open(path, "r") as f:
             return f.read()
