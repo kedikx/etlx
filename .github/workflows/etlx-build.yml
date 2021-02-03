@@ -18,7 +18,7 @@ jobs:
         python-version: ['3.6']
 
     services:
-      mariadb:
+      mysql:
         image: mysql:latest
         ports:
           - 3306
@@ -49,14 +49,15 @@ jobs:
     - name: Run setup.py
       run: |
         python ./setup.py --version
-    - name: Verify MySQL connection
-      env:
-        DB_PORT: ${{ job.services.mysql.ports[3306] }}
-      run: |
-        while ! mysqladmin ping -h"localhost" -P"$DB_PORT" --silent; do
-          sleep 1
-        done        
+#    - name: Verify MySQL connection
+#      env:
+#        DB_PORT: ${{ job.services.mysql.ports[3306] }}
+#      run: |
+#        mysql --host 127.0.0.1 --port ${DB_PORT} -uroot -ppassword -e "SHOW DATABASES"
     - name: Run tests
+      env:
+        ETLX_TEST_MYSQL_HOST: mysql
+        ETLX_TEST_MYSQL_PORT: ${{ job.services.mysql.ports[3306] }}
       run: |
         coverage run -m unittest discover -t . -s ./etlx_tests
     - name: Upload codecov report

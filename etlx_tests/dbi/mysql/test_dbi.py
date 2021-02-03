@@ -1,3 +1,4 @@
+import os
 import unittest
 from etlx_tests import TestCase
 from etlx.dbi.mysql import DBI_MySQL
@@ -6,8 +7,8 @@ from etlx.dbi.mysql import DBI_MySQL
 class DBI_MySQLdb_Test(TestCase):
 
     CONNECT = dict(
-        host="localhost",
-        port=3306,
+        host = os.getenv("ETLX_TEST_MYSQL_HOST", "127.0.0.1"),
+        port = int(os.getenv("ETLX_TEST_MYSQL_PORT", "3306")),
         database="etlx_test",
         user="etlx_user",
         password="test",
