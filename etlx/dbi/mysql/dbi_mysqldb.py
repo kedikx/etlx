@@ -13,11 +13,9 @@ class SQL_MySQL(SQL):
 
 class DBI_MySQL_MySQLdb(DBI):
 
+    SQL = SQL_MySQL
+
     def connect_factory(self, **kwargs):
         return MySQLdb.connect(**kwargs)
-
-    @property
-    def sql(self):
-        return SQL_MySQL(self)
 
     

@@ -1,7 +1,10 @@
 from etlx.abc.row import RowDict
+from etlx.sql import SQL
 
 
 class DBI:
+
+    SQL = SQL
 
     def __init__(self, *, connect):
         self._dbapi = None
@@ -11,12 +14,16 @@ class DBI:
 
     @property
     def database(self):
-        return self._connect_kwargs.get('database')
+        return self._connect_kwargs.get("database")
+
+    @property
+    def sql(self):
+        return self.SQL(self)
 
     @property
     def connected(self):
         return self._dbapi is not None
-        
+
     def connect_factory(self, **kwargs):
         raise NotImplementedError()
 
@@ -24,7 +31,7 @@ class DBI:
         params = dict()
         params.update(self._connect_kwargs)
         params.update(kwargs)
-        params = filter(lambda x: (x[1]!=None), params.items())
+        params = filter(lambda x: (x[1] != None), params.items())
         params = dict(params)
         self._dbapi = self.connect_factory(**params)
 

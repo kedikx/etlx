@@ -1,21 +1,21 @@
 import os
 import unittest
 from etlx_tests import TestCase
-from etlx.dbi.mysql import DBI_MySQL
+from etlx.dbi.postgres import DBI_Postgres
 
 
-class DBI_MySQLdb_Test(TestCase):
+class DBI_Postgres_Test(TestCase):
 
     CONNECT = dict(
-        host=os.getenv("ETLX_TEST_MYSQL_HOST", "127.0.0.1"),
-        port=int(os.getenv("ETLX_TEST_MYSQL_PORT", "3306")),
+        host=os.getenv("ETLX_TEST_POSTGRES_HOST", "127.0.0.1"),
+        port=int(os.getenv("ETLX_TEST_POSTGRES_PORT", "5432")),
         database="etlx_test",
         user="etlx_user",
         password="test",
     )
 
     def getTestDBI(self):
-        return DBI_MySQL(connect=self.CONNECT)
+        return DBI_Postgres(connect=self.CONNECT)
 
     def test_0(self):
         with self.getTestDBI() as dbi:
@@ -66,7 +66,7 @@ class DBI_MySQLdb_Test(TestCase):
     def test_6(self):
         dbi = self.getTestDBI()
         with dbi:
-            rows = dbi.sql.SELECT().FROM("TABLES", "information_schema").query()
+            rows = dbi.sql.SELECT().sql(" FROM information_schema.TABLES").query()
             rows = list(rows)
             print(len(rows))
 
