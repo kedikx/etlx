@@ -5,7 +5,7 @@ name: etlx-build
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ develop, feature/dbi ]
   pull_request:
     branches: [ develop ]
 
@@ -19,7 +19,7 @@ jobs:
 
     services:
       mysql:
-        image: mysql:latest
+        image: mysql
         ports:
           - 3306
         env:
@@ -27,7 +27,17 @@ jobs:
           MYSQL_PASSWORD: test
           MYSQL_DATABASE: etlx_test
           MYSQL_ROOT_PASSWORD: password
-        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=5s --health-retries=5
+
+      postgres:
+        image: postgres
+        ports:
+          - 5432
+        env:
+          POSTGRES_USER: etlx_user
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: etlx_test
+        options: --health-cmd="pg_isready" --health-interval=5s --health-timeout=5s --health-retries=5
 
     steps:
     - uses: actions/checkout@v2
@@ -52,6 +62,7 @@ jobs:
     - name: Run tests
       env:
         ETLX_TEST_MYSQL_PORT: ${{ job.services.mysql.ports[3306] }}
+        ETLX_TEST_POSGRES_PORT: ${{ job.services.mysql.ports[5432] }}
       run: |
         coverage run -m unittest discover -t . -s ./etlx_tests
     - name: Upload codecov report

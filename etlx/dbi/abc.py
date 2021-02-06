@@ -6,10 +6,11 @@ class DBI:
 
     SQL = SQL
 
-    def __init__(self, *, connect):
+    def __init__(self, *, connect=None):
         self._dbapi = None
         self._connect_kwargs = dict()
-        self._connect_kwargs.update(connect)
+        if isinstance(connect,dict):
+            self._connect_kwargs.update(connect)
         self._close_on_exit = False
 
     @property
