@@ -63,7 +63,7 @@ jobs:
     - name: Run tests
       env:
         ETLX_TEST_MYSQL_PORT: ${{ job.services.mysql.ports[3306] }}
-        ETLX_TEST_POSGRES_PORT: ${{ job.services.postgres.ports[5432] }}
+        ETLX_TEST_POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }}
       run: |
         coverage run -m unittest discover -t . -s ./etlx_tests
     - name: Upload codecov report
