@@ -15,10 +15,19 @@ class DBI_MySQLdb_Test(DBI_Test_MixIn,TestCase):
         password="test",
     )
 
-    def DBI(self) -> DBI_MySQL:
-        return DBI_MySQL(connect=self.CONNECT)
+    @classmethod
+    def DBI(cls) -> DBI_MySQL:
+        return DBI_MySQL(connect=cls.CONNECT)
 
-    def test_6(self):
+    @classmethod
+    def setUpClass(cls):
+        schema = cls.loadTestData('mysql/test-schema.sql', local=False)
+        stmts = [x for x in schema.split(";\n") if x]
+        with cls.DBI() as dbi:
+            for sql in stmts:
+                dbi.execute(sql)
+
+    def test_mysql_schema(self):
         dbi = self.DBI()
         with dbi:
             rows = dbi.sql.SELECT().FROM("TABLES", "information_schema").query()

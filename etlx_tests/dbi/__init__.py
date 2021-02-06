@@ -4,7 +4,8 @@ from etlx.dbi.abc import DBI
 
 class DBI_Test_MixIn:
 
-    def DBI(self) -> DBI: 
+    @classmethod
+    def DBI(cls) -> DBI: 
         return DBI()
 
     def randomInt(self, max=2**31):
@@ -135,4 +136,46 @@ class DBI_Test_MixIn:
             self.assertEqual(row.c1, v1)
             self.assertEqual(row.c2, v2)
         self.assertEqual(dbi.connected, False)
+
+    def test_dbi_sql(self):
+        v1 = self.randomString(n=10)
+        v2 = self.randomString(n=10)
+        v3 = self.randomString(n=10)
+        row1 = None
+
+        dbi = self.DBI()
+        
+        with dbi:
+            dbi.sql.INSERT("product", name=v1, description=v2).execute()
+
+        with dbi:
+            result = dbi.sql.SELECT().FROM("product").query()
+            result = list(result)
+            self.assertEqual(len(result), 1)
+            row1 = result[0]
+            self.assertEqual(row1.name, v1)
+            self.assertEqual(row1.description, v2)
+
+        with dbi:
+            dbi.sql.UPDATE("product", description=v3).WHERE(id=row1.id).execute()
+            dbi.sql.INSERT("product", name=v3, description=v1).execute()
+
+        with dbi:
+            result = dbi.sql.SELECT().FROM("product").sql(" ORDER BY id ASC").query()
+            result = list(result)
+            self.assertEqual(len(result), 2)
+            row2 = result[0]
+            self.assertEqual(row2.name, v1)
+            self.assertEqual(row2.description, v3)
+
+        with dbi:
+            dbi.sql.DELETE("product").WHERE(id=row1.id).execute()
+
+        with dbi:
+            result = dbi.sql.SELECT().FROM("product").query()
+            result = list(result)
+            self.assertEqual(len(result), 1)
+            row3 = result[0]
+            self.assertEqual(row3.name, v3)
+            self.assertEqual(row3.description, v1)
 

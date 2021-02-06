@@ -15,15 +15,23 @@ class DBI_Postgres_Test(DBI_Test_MixIn,TestCase):
         password="test",
     )
 
-    def DBI(self) -> DBI_Postgres:
-        return DBI_Postgres(connect=self.CONNECT)
+    @classmethod
+    def DBI(cls) -> DBI_Postgres:
+        return DBI_Postgres(connect=cls.CONNECT)
+
+    @classmethod
+    def setUpClass(cls):
+        schema = cls.loadTestData('postgres/test-schema.sql', local=False)
+        stmts = [x for x in schema.split(";\n") if x]
+        with cls.DBI() as dbi:
+            for sql in stmts:
+                dbi.execute(sql)
 
     def test_6(self):
         dbi = self.DBI()
         with dbi:
             rows = dbi.sql.SELECT().sql(" FROM information_schema.TABLES").query()
             rows = list(rows)
-            print(len(rows))
 
 
 if __name__ == "__main__":
