@@ -26,38 +26,35 @@ with open(os.path.join(BASEDIR, "etlx", "build.py"), "w") as f:
 
 class Requirements(Command):
 
-    FILENAME = "requirements.txt"
-
-    description = "save project requirements to file"
+    description = "prints project requirements"
     user_options = [
-        ("filename=", None, f"Output filename (default: {FILENAME})"),
+        ("all", None, f"Output (default: console)"),
     ]
 
     def initialize_options(self):
-        self.filname = None
+        self.all = False
 
     def finalize_options(self):
-        if not self.filname:
-            self.filname = self.FILENAME
+        pass
 
     def run(self):
         requires = []
         install_requires = getattr(self.distribution, "install_requires", [])
         requires.extend(pkg_resources.parse_requirements(install_requires))
-        extras_require = getattr(self.distribution, "extras_require", {})
+        extras_require = getattr(self.distribution, "extras_require", {}) if self.all else {}
         for extra, reqs in extras_require.items():
-            if not extra.startswith(":"):
-                continue
-            marker = extra[1:]
-            e = pkg_resources.invalid_marker(marker)
-            if e:
-                raise e
+            marker = None
+#            if not extra.startswith(":"):
+#                marker = extra[1:]
+#                e = pkg_resources.invalid_marker(marker)
+#                if e:
+#                    raise e
             for r in pkg_resources.parse_requirements(reqs):
                 assert not r.marker
                 r.marker = marker
                 requires.append(r)
-        with open(self.filname, "w") as f:
-            f.write("\n".join(sorted(map(str, requires))) + "\n")
+        result = "\n".join(sorted(map(str, requires)))
+        print(result)
 
 
 setuptools.setup(
@@ -79,6 +76,10 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     install_requires=["PyYAML"],
+    extras_require={
+        "mysql": ["mysqlclient"],
+        "postgres": ["psycopg2"]
+    },
     cmdclass={
         "requirements": Requirements,
     },
