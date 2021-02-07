@@ -1,6 +1,6 @@
 from datetime import datetime
 from etlx.abc.row import RowDict
-from etlx.abc.mapper import RowMapper, ExtractItem, ExtractConst, Datetime
+from etlx.abc.mapper import RowMapper, ExtractItem, ExtractAttr, ExtractConst, Datetime
 
 import unittest
 from etlx_tests import TestCase
@@ -10,7 +10,7 @@ class Test_Mapper(TestCase):
     def test_0(self):
         mapper = RowMapper()
         mapper["a"] = ExtractItem("_a")
-        mapper["b"] = ExtractItem("_b")
+        mapper["b"] = ExtractAttr("_b")
         mapper["c"] = ExtractConst(3)
         mapper["dt"] = Datetime(ExtractItem("_dt"))
         mapper["dt2"] = Datetime(ExtractItem("_dt2"))

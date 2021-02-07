@@ -5,7 +5,7 @@ name: etlx-build
 
 on:
   push:
-    branches: [ develop, feature/dbi ]
+    branches: [ master, develop, feature/dbi ]
   pull_request:
     branches: [ develop ]
 

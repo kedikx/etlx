@@ -5,7 +5,7 @@ from etlx_tests.dbi import DBI_Test_MixIn
 from etlx.dbi.mysql import DBI_MySQL
 
 
-class DBI_MySQLdb_Test(DBI_Test_MixIn,TestCase):
+class DBI_MySQLdb_Test(DBI_Test_MixIn, TestCase):
 
     CONNECT = dict(
         host=os.getenv("ETLX_TEST_MYSQL_HOST", "127.0.0.1"),
@@ -21,7 +21,7 @@ class DBI_MySQLdb_Test(DBI_Test_MixIn,TestCase):
 
     @classmethod
     def setUpClass(cls):
-        schema = cls.loadTestData('mysql/test-schema.sql', local=False)
+        schema = cls.loadTestData("mysql/test-schema.sql", local=False)
         stmts = [x for x in schema.split(";\n") if x]
         with cls.DBI() as dbi:
             for sql in stmts:

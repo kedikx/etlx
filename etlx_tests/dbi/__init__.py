@@ -1,21 +1,22 @@
+import unittest
 import string
 import random
 from etlx.dbi.abc import DBI
 
-class DBI_Test_MixIn:
 
+class DBI_Test_MixIn:
     @classmethod
-    def DBI(cls) -> DBI: 
+    def DBI(cls) -> DBI:
         return DBI()
 
-    def randomInt(self, max=2**31):
-        return int(random.random()*max)
+    def randomInt(self, max=2 ** 31):
+        return int(random.random() * max)
 
     def randomString(self, safe=True, n=256):
         s = string.printable
         if safe:
             s = [x for x in s if x not in "'\\%"]
-        return ''.join(random.choices(s, k=n))
+        return "".join(random.choices(s, k=n))
 
     def test_dbi_0(self):
         dbi: DBI = self.DBI()
@@ -144,7 +145,7 @@ class DBI_Test_MixIn:
         row1 = None
 
         dbi = self.DBI()
-        
+
         with dbi:
             dbi.sql.INSERT("product", name=v1, description=v2).execute()
 
@@ -179,3 +180,7 @@ class DBI_Test_MixIn:
             self.assertEqual(row3.name, v3)
             self.assertEqual(row3.description, v1)
 
+    def test_dbi_sql_where(self):
+        with self.DBI() as dbi:
+            result = dbi.sql.SELECT().FROM("product").WHERE_CV("id", *[1, 2, 3]).query()
+            result = list(result)

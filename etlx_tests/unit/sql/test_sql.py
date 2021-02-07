@@ -83,6 +83,21 @@ class Test_SQL(TestCase):
         sql = SQL().DELETE("test")
         self.assertEqual(str(sql), 'DELETE FROM "test"')
 
+    def test_WHERE(self):
+        sql = SQL().WHERE(a=1, b=2)
+        self.assertEqual(str(sql), ' WHERE "a"=1 AND "b"=2')
+
+    def test_WHERE_CV(self):
+        columns = "a"
+        values = [1, 3]
+        sql = SQL().WHERE_CV(columns, *values)
+        self.assertEqual(str(sql), ' WHERE "a" IN (1,3)')
+
+        columns = ("a", "b")
+        values = [(1, 2), (3, 4)]
+        sql = SQL().WHERE_CV(columns, *values)
+        self.assertEqual(str(sql), ' WHERE ("a"=1 AND "b"=2) OR ("a"=3 AND "b"=4)')
+
 
 if __name__ == "__main__":
     unittest.main()
