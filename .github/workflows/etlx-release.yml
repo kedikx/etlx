@@ -4,8 +4,11 @@
 name: etlx-release
 
 on:
+#  push:
+#    tags:
+#      - 'v*'
   release:
-    types: [created]
+    types: [published]
 
 jobs:
   deploy:
